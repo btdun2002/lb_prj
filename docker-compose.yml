@@ -34,7 +34,6 @@ services:
     container_name: load-balancer
     ports:
       - "8080:80"
-      - "443:443"
       - "8404:8404"
     depends_on:
       - backend1
@@ -61,14 +60,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana-data:/var/lib/grafana
     networks:
       - backend
 
 networks:
   backend:
     driver: bridge
-
-volumes:
-  grafana-data:
