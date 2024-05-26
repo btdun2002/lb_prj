@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  backend1:
+    build:
+      context: ./backend
+    container_name: backend1
+    ports:
+      - "5001:5000"
+    networks:
+      - backend
+
+  backend2:
+    build:
+      context: ./backend
+    container_name: backend2
+    ports:
+      - "5002:5000"
+    networks:
+      - backend
+
+  backend3:
+    build:
+      context: ./backend
+    container_name: backend3
+    ports:
+      - "5003:5000"
+    networks:
+      - backend
+
+  load-balancer:
+    build:
+      context: ./haproxy
+    container_name: load-balancer
+    ports:
+      - "8080:80"
+      - "443:443"
+      - "8404:8404"
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+     - backend
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  grafana-data:
