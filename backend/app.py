@@ -1,14 +1,10 @@
 from flask import Flask, request
-import logging
 
 app = Flask(__name__)
 
-logging.basicConfig(level=logging.INFO)
-
 @app.route('/')
 def index():
-    app.logger.info(f"Request from: {request.remote_addr}")
-    return "Hello from Backend Server! This is the main endpoint."
+    return "Hello from Backend Server! This is the main endpoint.\n"
 
 @app.route('/health')
 def health():
