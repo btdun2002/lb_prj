@@ -34,7 +34,7 @@ services:
     container_name: load-balancer
     ports:
       - "8080:80"
-      - "445:445"
+      - "445:443"
       - "8404:8404"
     depends_on:
       - backend1
