@@ -10,7 +10,7 @@ function show_files {
     do
         if [ -d "$file" ]; then
             show_files "$file"
-        elif [ -f "$file" ]; then
+        elif [ -f "$file" ] && [ "$file" != "./client/client" ]; then
             echo -e "\nContent of $file:"
             cat "$file"
         fi

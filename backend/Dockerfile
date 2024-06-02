@@ -1,12 +1,21 @@
-FROM python:3.9-slim
+FROM golang:1.22-alpine as builder
 
 WORKDIR /app
+COPY go.mod .
+COPY go.sum .
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN go mod download
 
 COPY . .
 
+RUN go build -o main .
+
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/main .
+
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+CMD ["./main"]
