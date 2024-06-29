@@ -8,6 +8,7 @@ import (
     "net/http"
     "os"
     "strings"
+    "time"
 )
 
 // Response is the structure of the server's response
@@ -16,7 +17,7 @@ type Response struct {
 }
 
 func sendMessage(message string) (string, error) {
-    url := "http://localhost:8080/message"
+    url := "http://load-balancer:80/message"
     requestBody, err := json.Marshal(map[string]string{"message": message})
     if err != nil {
         return "", err
@@ -53,5 +54,6 @@ func main() {
         }
 
         fmt.Println("Server response:\n    ", response)
+        time.Sleep(1 * time.Second) 
     }
 }

@@ -1,0 +1,10 @@
+FROM mysql:5.7
+
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=back_app
+ENV MYSQL_USER=bank_user
+ENV MYSQL_PASSWORD=bank_password
+
+COPY ./scripts/ /docker-entrypoint-initdb.d/
+
+EXPOSE 3306

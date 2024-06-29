@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   backend1:
     build:
@@ -9,6 +7,8 @@ services:
       - "5001:5000"
     networks:
       - backend
+    depends_on:
+      - mysql
 
   backend2:
     build:
@@ -18,6 +18,8 @@ services:
       - "5002:5000"
     networks:
       - backend
+    depends_on:
+      - mysql
 
   backend3:
     build:
@@ -27,6 +29,8 @@ services:
       - "5003:5000"
     networks:
       - backend
+    depends_on:
+      - mysql
 
   load-balancer:
     build:
@@ -39,6 +43,32 @@ services:
       - backend1
       - backend2
       - backend3
+    networks:
+      - backend
+
+  client:
+    build:
+      context: ./client
+    container_name: client
+    networks:
+      - backend
+    depends_on:
+      - load-balancer
+    logging:
+      driver: "syslog"
+
+  mysql:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bank_app
+      MYSQL_USER: bank_user
+      MYSQL_PASSWORD: bank_password
     networks:
       - backend
 
